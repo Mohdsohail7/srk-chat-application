@@ -23,12 +23,16 @@ const io = new Server(server, {
 // routes
 const userRegisterRoute = require("./routes/auth");
 const userLoginRoute = require("./routes/auth");
-const messagesRoute = require("./routes/auth");
+const messagesRoute = require("./routes/messages"); 
 const usersRoute = require("./routes/auth");
 
+console.log("Mounting routes...");
+
 app.use("/v1/api/auth", userRegisterRoute);
+console.log('User register route mounted on /v1/api/auth');
 app.use("/v1/api/auth", userLoginRoute);
-app.use("/v1/api/auth", messagesRoute);
+app.use("/v1/api", messagesRoute);
+console.log('Messages route mounted on /v1/api/messages');
 app.use("/v1/api/auth", usersRoute);
 
 // socket io logic

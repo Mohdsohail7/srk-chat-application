@@ -2,7 +2,7 @@ const User = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const Message = require("../models/messages");
+const Messages = require("../models/messages")
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -75,16 +75,16 @@ const loginUser = async (req, res) => {
 const getAllMessages = async (req, res) => {
     const { sender, receiver } = req.query;
     try {
-        const messages = await Message.find({
+        const messages = await Messages.find({
             $or: [
                 { sender, receiver },
                 { sender: receiver, receiver: sender },
             ],
         }).sort({ createdAt: 1});
 
-        if (!messages || messages.length === 0) {
-            return res.status(404).json({ message: "Messages not found."});
-        }
+        // if (!messages || messages.length === 0) {
+        //     return res.status(404).json({ message: "Messages not found."});
+        // }
 
         return res.status(200).json(messages);
     } catch (error) {
