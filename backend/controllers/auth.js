@@ -2,6 +2,7 @@ const User = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const Message = require("../models/messages");
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -70,5 +71,43 @@ const loginUser = async (req, res) => {
     }
 }
 
+// fetch all messages controller
+const getAllMessages = async (req, res) => {
+    const { sender, receiver } = req.query;
+    try {
+        const messages = await Message.find({
+            $or: [
+                { sender, receiver },
+                { sender: receiver, receiver: sender },
+            ],
+        }).sort({ createdAt: 1});
 
-module.exports = { createUser, loginUser };
+        if (!messages || messages.length === 0) {
+            return res.status(404).json({ message: "Messages not found."});
+        }
+
+        return res.status(200).json(messages);
+    } catch (error) {
+        return res.status(500).json({ message: "Server Internal Error While Fetching Messages."});
+    }
+}
+
+
+// fetch all users controller
+async function getAllUsers(req, res) {
+    const { currentUser } = req.query;
+    try {
+        const users = await User.find({ username: { $ne: currentUser }});
+
+        if (!users || users.length === 0) {
+            return res.status(404).json({ message: "Users not found."});
+        }
+
+        return res.status(200).json(users);
+    } catch (error) {
+        return res.status(500).json({ message: "Server Internal Error While Fetching Users."});
+    }
+}
+
+
+module.exports = { createUser, loginUser, getAllMessages, getAllUsers };
