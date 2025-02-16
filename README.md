@@ -1,4 +1,4 @@
-📸 srk chat application
+ srk chat application
 srk chat application is a chat app in this app users can regsiter and login. after register and login users can chat each other in real time.
 
 🛠 Tech Stack & Dependencies
